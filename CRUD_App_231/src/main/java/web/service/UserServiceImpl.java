@@ -19,6 +19,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
@@ -29,17 +30,33 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getUser(Long id) {
-        return userDao.getUser(id);
+        User user = userDao.getUser(id);
+        if (user == null) {
+            throw new IllegalArgumentException("User with id " + id + " not found");
+        }
+        return user;
     }
 
     @Override
     public void deleteUser(Long id) {
-        userDao.deleteUser(id);
+        User user = userDao.getUser(id);
+        if (user == null) {
+            throw new IllegalArgumentException("User with id " + id + " not found");
+        }
+        userDao.deleteUser(user);
     }
 
     @Override
     public void updateUser(Long id, User user) {
-        userDao.updateUser(id, user);
+        User existingUser = userDao.getUser(id);
+        if (existingUser == null) {
+            throw new IllegalArgumentException("User with id " + id + " not found");
+        }
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setAge(user.getAge());
+        existingUser.setEmail(user.getEmail());
+        userDao.updateUser(existingUser);
     }
 }
