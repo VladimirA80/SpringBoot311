@@ -8,7 +8,7 @@
 <body>
 <h1>Пользователи:</h1>
 <!-- кнопка добавления нового пользователя  -->
-<form th:action="@{/new}" method="get" style="display: inline-block; margin-bottom: 15px;">
+<form th:action="@{/users/new}" method="get" style="display: inline-block; margin-bottom: 15px;">
     <button type="submit" class="btn btn-success">
         <i class="bi bi-plus-circle"></i> Добавить нового пользователя
     </button>
@@ -31,14 +31,14 @@
         <td th:text="${user.email}"></td>
         <td>
             <!-- кнопки редактирование и удаление  -->
-            <form th:action="@{/edit}" method="get" style="display: inline-block;">
+            <form th:action="@{/users/edit}" method="get" style="display: inline-block;">
                 <input type="hidden" name="id" th:value="${user.id}">
                 <button type="submit" class="btn btn-primary btn-sm">Edit</button>
             </form>
         </td>
 
         <td>
-            <form th:action="@{/delete}" method="post">
+            <form th:action="@{/users/delete}" method="post">
                 <input type="hidden" name="id" th:value="${user.id}">
                 <button type="submit" >Delete</button>
             </form>

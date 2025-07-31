@@ -2,7 +2,6 @@ package VA80._SpringBoot.controller;
 
 import VA80._SpringBoot.model.User;
 import VA80._SpringBoot.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,16 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
 
-    @Autowired  // Внедрение зависимости через конструктор
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String getUsersList(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
@@ -29,13 +28,13 @@ public class UserController {
 
     @GetMapping("/new")
     public String newUser(@ModelAttribute("user") User user) {
-        return "newuser";
+        return "new";
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public String saveUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
-        return "redirect:/"; // Перенаправление на список пользователей
+        return "redirect:/users"; // Перенаправление на список пользователей
     }
 
     @PostMapping("/delete")
@@ -45,7 +44,7 @@ public class UserController {
         } catch (EmptyResultDataAccessException e) {
             System.out.println("User not found " + e);
         }
-        return "redirect:/";
+        return "redirect:/users";
     }
 
     @GetMapping("/edit")
@@ -57,7 +56,7 @@ public class UserController {
     @PostMapping("/update")
     public String updateUser(@RequestParam("id") Long id, @ModelAttribute("user") User user) {
         userService.updateUser(id, user);
-        return "redirect:/";
+        return "redirect:/users";
     }
 
 }
